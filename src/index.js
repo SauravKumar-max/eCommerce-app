@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import setupMockServer from "./api/mock.server";
+import { ProductProvider } from "./context/product-context"
 
 setupMockServer();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ProductProvider>
+      <App />
+    </ProductProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
