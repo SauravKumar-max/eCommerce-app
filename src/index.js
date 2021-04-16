@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import setupMockServer from "./api/mock.server";
 import { ProductProvider } from "./context/product-context";
 import { ProductDetailsProvider } from "./context/productpage-context";
+import { BrowserRouter as Router } from "react-router-dom";
 
 setupMockServer();
 
@@ -13,7 +14,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ProductDetailsProvider>
       <ProductProvider>
-        <App />
+        <Router>
+          <App />
+        </Router>
       </ProductProvider>
     </ProductDetailsProvider>
   </React.StrictMode>,
