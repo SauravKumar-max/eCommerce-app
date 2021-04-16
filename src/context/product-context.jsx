@@ -22,7 +22,7 @@ export function ProductProvider({children}){
       }, []);
     
 
-    const [state, dispatch] = useReducer(productReducer,  { showInventoryAll: true, showFastDeliveryOnly: false, sortBy: null });
+    const [state, dispatch] = useReducer(productReducer,  { showInventoryAll: true, showFastDeliveryOnly: false, sortBy: null, searchInputValue: "", priceRange: "1000", toggleFilter: false});
 
     return (
         <ProductList.Provider value={{ data, state, dispatch}}>
@@ -46,10 +46,18 @@ const productReducer = (state, action) => {
             showFastDeliveryOnly: !state.showFastDeliveryOnly
           });
         case "SORT":
-          return {
-            ...state,
-            sortBy: action.payload
-          };
+          return {...state, sortBy: action.payload};
+
+        case "SEARCH":
+          return {...state, searchInputValue: action.payload};
+
+        case "PRICE_RANGE": 
+          return {...state, priceRange: action.payload};
+
+        case "TOGGLE_FILTERS": 
+            return {...state, toggleFilter: !state.toggleFilter};
+ 
+
         default:
           return state;
       }
