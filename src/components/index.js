@@ -1,6 +1,9 @@
-export { Navbar } from "./Navbar";
+export { ProductNavbar } from "./Navbars/Product-Navbar";
+export { Navbar } from "./Navbars/Navbar";
 export { FilterBox } from "./FilterBox";
 export { ProductCard } from "./ProductCard";
 export { ProductPage } from "./ProductPage"
 export { Cart } from "./Cart";
 export { WishList } from "./Wishlist";
+export { Home } from "./Home";
+export { ErrorPage } from  "./ErrorPage";
