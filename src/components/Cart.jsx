@@ -1,8 +1,9 @@
 import { useProductDetails } from "../context/productpage-context";
 import { Navbar } from "./index";
+import { Link } from "react-router-dom";
 
 export function Cart(){
-    const { cartState, dispatchCart, setRoutes } = useProductDetails();
+    const { cartState, dispatchCart } = useProductDetails();
     const { itemsInCart } = cartState;
     const reducer = ( acc, val ) => acc + parseInt(val.price) * val.quantity; 
     const totalPrice = itemsInCart.reduce(reducer, 0);
@@ -13,7 +14,7 @@ export function Cart(){
             <div className="empty-cart">
                 <h2 className="empty-message">Your Cart Is Empty!</h2>
                 <p><i className="far fa-frown"></i></p>
-                <button className="secondary-btn "> Add Items From Wishlist </button>
+                <Link to="/wishlist" className="secondary-link "> Add Items From Wishlist </Link>
             </div>
         )
     }
@@ -53,11 +54,10 @@ export function Cart(){
                                     <div className="cart-btns">
                                         {
                                             cartState.itemsInWishList.find(element => element.id === item.id) ? 
-                                            <button onClick={() => setRoutes("wishlist")}
-                                                className="secondary-btn">
-                                                <i className="fas fa-arrow-right"></i>
+                                            <Link to="/wishlist" className="secondary-link">
+                                                <i className="fas fa-arrow-right"></i> 
                                                 Go to Wishlist
-                                            </button>
+                                            </Link>
                                             : 
                                             <button className={ item.inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
                                                 disabled={!item.inStock} 
