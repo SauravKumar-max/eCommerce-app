@@ -41,7 +41,7 @@ export function Cart(){
                                 </div>
                                 <div>
                                     <div className="cart-quantity">
-                                        <p className="text-quantity">quantiy: </p>
+                                        <p className="text-quantity">quantity: </p>
                                         {
                                             item.quantity === 1 ? 
                                             <button className="minus-btn" onClick={() => dispatchCart({type: "REMOVE_FROM_CART", payload: item.id})}><i className="far fa-trash-alt"></i></button> : 
