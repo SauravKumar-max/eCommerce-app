@@ -14,8 +14,6 @@ export function Cart(){
     const reducer = ( acc, val ) => acc + parseInt(val.price, 10) * parseInt(val.quantity, 10); 
     const totalPrice = cart.reduce(reducer, 0);
 
-    console.log({wishlist})
-
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
     const deleteCartItem = async (id) => {
         try {

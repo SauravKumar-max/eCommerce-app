@@ -11,9 +11,6 @@ export function ProductCard(){
     const { cart } = cartState;
     const { wishlistState, dispatchWishlist } = useWishlist();
     const { wishlist } = wishlistState;
-    console.log({wishlist})
-    
-
 
     function getSortedData(productData, sortBy){
         if(sortBy === "LOW_TO_HIGH"){

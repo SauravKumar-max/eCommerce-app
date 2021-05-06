@@ -10,7 +10,6 @@ export function WishList(){
     const { cart } = cartState;
     const { wishlistState, dispatchWishlist } = useWishlist();
     const { wishlist } = wishlistState;
-    console.log(wishlistState.wishlist )
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
     const deleteWishlistItem = async (id) => {
