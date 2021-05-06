@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
-import { useProductDetails } from "../../context/productpage-context";
+import { useCart } from "../../context/cart-context";
+import { useWishlist } from "../../context/wishlist-context";
 
 export function Navbar(){
-    const { cartState } = useProductDetails();
+    const { cartState } = useCart();
+    const { cart } = cartState;
+    const { wishlistState } = useWishlist()
+    const { wishlist } = wishlistState;
     return(
         <div>
             <nav className="navbar">
@@ -21,13 +25,13 @@ export function Navbar(){
                     <li>
                         <Link to="/cart" className="nav-link">
                             Cart
-                            { cartState.itemsInCart.length > 0 && <span className="items-count">{ cartState.itemsInCart.length }</span> }
+                            { cart.length > 0 && <span className="items-count">{ cart.length }</span> }
                         </Link>
                     </li>
                     <li>
                         <Link to="/wishlist" className="nav-link">
                             Wishlist
-                            { cartState.itemsInWishList.length > 0 && <span className="items-count">{ cartState.itemsInWishList.length }</span> }
+                            { wishlist.length > 0 && <span className="items-count">{ wishlist.length }</span> }
                         </Link>
                     </li>
                 </ul>
