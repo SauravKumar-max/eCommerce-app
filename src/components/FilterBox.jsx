@@ -73,7 +73,7 @@ export function FilterBox(){
     return (
         <div className="filter-box">
             <div onClick={() => dispatch({type: "TOGGLE_FILTERS"})} className="dropdown-btn">
-                <button><i class="fas fa-caret-square-down"></i></button>
+                <button><i className="fas fa-caret-square-down"></i></button>
                 <h3>Filters</h3>
             </div>
             {
