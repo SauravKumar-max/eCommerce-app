@@ -3,22 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import setupMockServer from "./api/mock.server";
 import { ProductProvider } from "./context/product-context";
-import { ProductDetailsProvider } from "./context/productpage-context";
+import { CartProvider } from "./context/cart-context";
+import { WishlistProvider } from "./context/wishlist-context";
 import { BrowserRouter as Router } from "react-router-dom";
 
-setupMockServer();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ProductDetailsProvider>
-      <ProductProvider>
-        <Router>
-          <App />
-        </Router>
-      </ProductProvider>
-    </ProductDetailsProvider>
+  <React.StrictMode> 
+    <ProductProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <Router>
+            <App />
+          </Router>
+        </WishlistProvider>
+      </CartProvider>
+    </ProductProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
