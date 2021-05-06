@@ -1,16 +1,35 @@
-import { useProductDetails } from "../context/productpage-context";
+import { useCart } from "../context/cart-context";
 import { Link } from "react-router-dom";
+import { useProduct } from "../context/product-context";
+import { useWishlist } from "../context/wishlist-context";
+import { AddToCartBtn } from "./index";
+import axios from "axios";
  
 export function ProductPage(){
-    const { cartState, dispatchCart } = useProductDetails();
-    const {id, name, brand, image, price, ratings, offer, fastDelivery, inStock} = cartState.items;
-    console.log(cartState.itemInCart);
+    const { state, dispatch } = useProduct();
+    const { item } = state;
+    const { cartState } = useCart();
+    const { cart } = cartState;
+    const { wishlistState, dispatchWishlist } = useWishlist();
+    const { wishlist } = wishlistState;
+    const {_id, name, brand, image, price, ratings, offer, fastDelivery, inStock} = item;
+
+    const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
+    const addToWishlist = async (product) => {
+        try {
+            await axios.post(api, { _id: product._id});
+            dispatchWishlist({type: "ADD_TO_WISHLIST", payload: product})
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
     return(
             <div className="product-container">
                 <div className="product-modal">
 
                     <img className="product-img" src={image} alt={name} />
-                    <button onClick={ () => dispatchCart({type: "HIDE_PRODUCT", payload: null})} className="close-btn">X</button>
+                    <button onClick={ () => dispatch({type: "HIDE_PRODUCT", payload: null})} className="close-btn">X</button>
 
                     <div className="product-details">
                         <p className="product-name">{name}</p>
@@ -46,10 +65,10 @@ export function ProductPage(){
                         <div className="product-btns">
                             
                             {
-                                cartState.itemsInWishList.find(element => element.id === id) ?
+                                wishlist.find(element => element._id === _id) ?
                                     <Link to="/wishlist" className="primary-link">Go To Wishlist <i className="fas fa-arrow-right"></i></Link>
                                     :
-                                    <button onClick={() => dispatchCart({type: "ADD_TO_WISHLIST", payload: cartState.items}) }
+                                    <button onClick={() => addToWishlist(item) }
                                         className="secondary-btn">
                                         <i className="far fa-heart"></i>
                                         Add To Wishlist
@@ -58,16 +77,10 @@ export function ProductPage(){
                             
                             
                             { 
-                                cartState.itemsInCart.find(element => element.id === id) ? 
-                                    <Link to="/cart"  onClick={() => dispatchCart({type: "HIDE_PRODUCT", payload: null})} className="secondary-link"><i className="fas fa-arrow-right"></i> Go to Cart</Link>
+                                cart.find(element => element._id === _id) ? 
+                                    <Link to="/cart"  onClick={() => dispatch({type: "HIDE_PRODUCT", payload: null})} className="secondary-link"><i className="fas fa-arrow-right"></i> Go to Cart</Link>
                                     : 
-                                    <button className={ inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
-                                        disabled={!inStock} 
-                                        onClick={ () => dispatchCart({type: "ADD_TO_CART", payload: cartState.items})}>
-                                        <i className="fas fa-shopping-cart"></i>
-                                        Add To Cart
-                                    </button>
-                                    
+                                    <AddToCartBtn item={state.item}/>
                             }                            
                         </div>
 
