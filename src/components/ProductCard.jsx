@@ -1,12 +1,19 @@
 import { useProduct } from "../context/product-context";
-import { useProductDetails } from "../context/productpage-context";
+import { useCart } from "../context/cart-context";
+import { AddToCartBtn } from "./index";
 import { Link } from "react-router-dom";
-
-
+import { useWishlist } from "../context/wishlist-context";
+import axios from "axios";
 
 export function ProductCard(){
-    const {data, state} = useProduct();
-    const { dispatchCart, cartState } = useProductDetails();
+    const { data, state, dispatch } = useProduct();
+    const { cartState } = useCart();
+    const { cart } = cartState;
+    const { wishlistState, dispatchWishlist } = useWishlist();
+    const { wishlist } = wishlistState;
+    console.log({wishlist})
+    
+
 
     function getSortedData(productData, sortBy){
         if(sortBy === "LOW_TO_HIGH"){
@@ -35,9 +42,30 @@ export function ProductCard(){
     }
     
     const searchResultData = getSearchData(data, state.searchInputValue );
-    const priceRangeData = priceRangeFiltered( searchResultData, state.priceRange )
+    const priceRangeData = priceRangeFiltered( searchResultData, state.priceRange );
     const sortedData = getSortedData(priceRangeData, state.sortBy);
-    const filteredData = getFilteredData(sortedData, state.showInventoryAll, state.showFastDeliveryOnly)
+    const filteredData = getFilteredData(sortedData, state.showInventoryAll, state.showFastDeliveryOnly);
+
+    const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
+
+    const removewishlist = async (id) => {
+        try {
+            await axios.delete(`${api}/${id}`);
+            dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: id });
+        } catch (error) {
+            console.log(error);
+        }
+    } 
+
+
+    const addToWishlist = async (product) => {
+        try {
+            axios.post(api, {_id: product._id});
+            dispatchWishlist({ type: "ADD_TO_WISHLIST", payload: product });
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return(
         <div style={{
@@ -48,12 +76,13 @@ export function ProductCard(){
             {filteredData === [] ? <h2>No Data Found</h2> : filteredData.map(item => {
                 return(
                     
-                    <div style={{ border: "solid 1px #adadad" }} key={item.id} className="card-bdg">
-                        <img onClick={ () => dispatchCart({type: "SHOW_PRODUCT", payload: item}) } className="card-img" src={item.image} alt={item.name}/>
+                    <div style={{ border: "solid 1px #adadad" }} key={item._id} className="card-bdg">
+                        <img onClick={ () => dispatch({type: "SHOW_PRODUCT", payload: item}) } className="card-img" src={item.image} alt={item.name}/>
                         <div className="wishlist-heart">
-                            <p>{cartState.itemsInWishList.find(element => element.id === item.id) ?
-                              <i onClick={() => dispatchCart({type: "REMOVE_FROM_WISHLIST", payload: item.id})} className="fas fa-heart"></i> : 
-                              <i onClick={() => dispatchCart({type: "ADD_TO_WISHLIST", payload: item})} className="far fa-heart"></i>}
+                            <p>{wishlist.find(element => element._id === item._id) ?
+                              <i onClick={() => removewishlist(item._id) } className="fas fa-heart"></i> 
+                              : 
+                              <i onClick={() => addToWishlist(item)} className="far fa-heart"></i>}
                             </p>
                         </div>
                         <div className="card-info" style={{padding: "0.5rem 1rem 0 1rem"}}>
@@ -66,15 +95,10 @@ export function ProductCard(){
                             </div>
                             <div className="card-btn">
                                 {
-                                    cartState.itemsInCart.find(element => element.id === item.id) ? 
+                                    cart.find(element => element._id === item._id) ? 
                                     <Link to="/cart" className="secondary-link" > <i className="fas fa-arrow-right"></i> Go to Cart </Link>
                                     :
-                                    <button className={ item.inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
-                                        disabled={!item.inStock} 
-                                        onClick={ () => dispatchCart({type: "ADD_TO_CART", payload: item})}>
-                                        <i className="fas fa-shopping-cart"></i>
-                                        {item.inStock ? "Add To Cart" : "Out of Stock"}
-                                    </button>
+                                    <AddToCartBtn item={item} />
                                 }
                             </div>
                         </div>
