@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, useState } from "react";
+import { productReducer } from "../reducer/product-reducer";
 import axios from "axios";
 
 const ProductList = createContext();
@@ -8,12 +9,13 @@ export function useProduct() {
 }
 
 export function ProductProvider({children}){
+    const api = "https://ecommerce-backend.sauravkumar007.repl.co/products";
     const [ data, setData ] = useState([]);
 
     useEffect(() => {
         (async function () {
             try {
-                const response = await axios.get("/api/products");
+                const response = await axios.get(api);
                 setData(response.data.products);
             } catch (error) {
                 console.log(error);
@@ -22,44 +24,13 @@ export function ProductProvider({children}){
       }, []);
     
 
-    const [state, dispatch] = useReducer(productReducer,  { showInventoryAll: true, showFastDeliveryOnly: false, sortBy: null, searchInputValue: "", priceRange: "1000", toggleFilter: false});
+    const [state, dispatch] = useReducer(productReducer,  { showInventoryAll: true, showFastDeliveryOnly: false, sortBy: null, searchInputValue: "", priceRange: "1000", toggleFilter: false, item: null});
 
     return (
-        <ProductList.Provider value={{ data, state, dispatch}}>
+        <ProductList.Provider value={{ api, data, state, dispatch}}>
             {children}
         </ProductList.Provider>
     )
 }
 
-
-const productReducer = (state, action) => {
-    switch (action.type) {
-        case "TOGGLE_INVENTORY":
-          return (state = {
-            ...state,
-            showInventoryAll: !state.showInventoryAll
-          });
-
-        case "TOGGLE_DELIVERY":
-          return (state = {
-            ...state,
-            showFastDeliveryOnly: !state.showFastDeliveryOnly
-          });
-        case "SORT":
-          return {...state, sortBy: action.payload};
-
-        case "SEARCH":
-          return {...state, searchInputValue: action.payload};
-
-        case "PRICE_RANGE": 
-          return {...state, priceRange: action.payload};
-
-        case "TOGGLE_FILTERS": 
-            return {...state, toggleFilter: !state.toggleFilter};
- 
-
-        default:
-          return state;
-      }
-}
 
