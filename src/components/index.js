@@ -7,3 +7,4 @@ export { Cart } from "./Cart";
 export { WishList } from "./Wishlist";
 export { Home } from "./Home";
 export { ErrorPage } from  "./ErrorPage";
+export { AddToCartBtn } from "./AddToCartBtn";
