@@ -1,13 +1,61 @@
-import { useProductDetails } from "../context/productpage-context";
+import { useCart } from "../context/cart-context";
 import { Navbar } from "./index";
 import { Link } from "react-router-dom";
+import { useWishlist } from "../context/wishlist-context";
+import axios from "axios";
+
 
 export function Cart(){
-    const { cartState, dispatchCart } = useProductDetails();
-    const { itemsInCart } = cartState;
-    const reducer = ( acc, val ) => acc + parseInt(val.price) * val.quantity; 
-    const totalPrice = itemsInCart.reduce(reducer, 0);
-    console.log(totalPrice)
+    
+    const { cartState, dispatchCart } = useCart();
+    const { cart } = cartState;
+    const { wishlistState, dispatchWishlist } = useWishlist();
+    const { wishlist } = wishlistState;
+    const reducer = ( acc, val ) => acc + parseInt(val.price, 10) * parseInt(val.quantity, 10); 
+    const totalPrice = cart.reduce(reducer, 0);
+
+    console.log({wishlist})
+
+    const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
+    const deleteCartItem = async (id) => {
+        try {
+            await axios.delete(`${api}/${id}`);
+            dispatchCart({ type: "DELETE_FROM_CART", payload: id });
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const increaseQty = async (product) => {
+        try {
+            await axios.post(`${api}/${product._id}` , { quantity: product.quantity + 1 });
+            dispatchCart({type: "INCREASE_QUANTITY", payload: product._id});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const decreaseQty = async (product) => {
+        try {
+            await axios.post(`${api}/${product._id}`, { quantity: product.quantity - 1 });
+            dispatchCart({type: "DECREASE_QUANTITY", payload: product._id});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const addToWishlist = async (product) => {
+        const wishApi = 'https://ecommerce-backend.sauravkumar007.repl.co/wishlists';
+        try {
+            axios.post(wishApi, {_id: product._id});
+            dispatchWishlist({ type: "ADD_TO_WISHLIST", payload: product });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 
     function EmptyCart(){
         return (
@@ -25,9 +73,9 @@ export function Cart(){
             <h2 style={{textAlign: "center", margin: "5.5rem 1rem 0rem 1rem", fontSize: "2rem", color: "rgb(68, 69, 74)"}}>My Cart</h2>
             <div className="cart-container">
                 <div className="cart-items">
-                {itemsInCart.map((item) => {
+                {cart.map((item) => {
                     return(
-                        <div className="cart" key={item.id}>
+                        <div className="cart" key={item._id}>
                             <img className="cart-image" src={item.image} alt={item.name} />
                             <div className="cart-details">
                                 <div>
@@ -44,16 +92,17 @@ export function Cart(){
                                         <p className="text-quantity">quantity: </p>
                                         {
                                             item.quantity === 1 ? 
-                                            <button className="minus-btn" onClick={() => dispatchCart({type: "REMOVE_FROM_CART", payload: item.id})}><i className="far fa-trash-alt"></i></button> : 
-                                            <button className="minus-btn" onClick={ () => dispatchCart({type: "DECREASE_QUANTITY", payload: item.id})}><i className="fas fa-minus"></i></button>
+                                            <button className="minus-btn" onClick={() => deleteCartItem(item._id)}><i className="far fa-trash-alt"></i></button> : 
+                                            <button className="minus-btn" onClick={ () => decreaseQty(item)}><i className="fas fa-minus"></i></button>
 
                                         }
                                         <p className="quantity">{item.quantity}</p>
-                                        <button className="plus-btn" onClick={() => dispatchCart({type: "INCREASE_QUANTITY", payload: item.id})}><i className="fas fa-plus"></i></button>
+                                        <button className="plus-btn" onClick={() => increaseQty(item)}><i className="fas fa-plus"></i></button>
+
                                     </div>
                                     <div className="cart-btns">
                                         {
-                                            cartState.itemsInWishList.find(element => element.id === item.id) ? 
+                                            wishlist.find(element => element._id === item._id) ? 
                                             <Link to="/wishlist" className="secondary-link">
                                                 <i className="fas fa-arrow-right"></i> 
                                                 Go to Wishlist
@@ -61,12 +110,12 @@ export function Cart(){
                                             : 
                                             <button className={ item.inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
                                                 disabled={!item.inStock} 
-                                                onClick={ () => dispatchCart({type: "ADD_TO_WISHLIST", payload: item})}>
+                                                onClick={ () => addToWishlist(item)}>
                                                 <i className="far fa-shopping-heart"></i>
                                                 Add To Wishlist
                                             </button>
                                         }
-                                        <button className="secondary-btn" onClick={() => dispatchCart({type: "REMOVE_FROM_CART", payload: item.id})}><i className="far fa-trash-alt"></i>Remove From Cart</button>
+                                        <button className="secondary-btn" onClick={() => deleteCartItem(item._id)}><i className="far fa-trash-alt"></i>Remove From Cart</button>
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +125,7 @@ export function Cart(){
                 </div>
 
                 <div className="receipt-box">
-                    <p className="receipt-details"> Price Details({itemsInCart.length} items)</p>
+                    <p className="receipt-details"> Price Details({cart.length} items)</p>
                     <div className="total-mrp">
                         <p> Total MRP </p>
                         <p className="total-price"> Rs. {totalPrice}</p>
@@ -102,7 +151,7 @@ export function Cart(){
     return (
             <>
                 <Navbar/>
-                {itemsInCart.length === 0 ? <EmptyCart/> : <CartItems/>}
+                {cart.length === 0 ? <EmptyCart/> : <CartItems/>}
             </>
             
     )
