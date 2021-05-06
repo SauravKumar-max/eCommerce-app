@@ -1,10 +1,39 @@
-import { useProductDetails } from "../context/productpage-context";
+import { useCart } from "../context/cart-context";
 import { Navbar } from "./index"
 import { Link } from "react-router-dom";
+import { useWishlist } from "../context/wishlist-context";
+// import { useEffect } from "react";
+import axios from "axios";
 
 export function WishList(){
-    const { cartState, dispatchCart } = useProductDetails();
-    const { itemsInWishList } = cartState;
+    const { cartState, dispatchCart } = useCart();
+    const { cart } = cartState;
+    const { wishlistState, dispatchWishlist } = useWishlist();
+    const { wishlist } = wishlistState;
+    console.log(wishlistState.wishlist )
+
+    const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
+    const deleteWishlistItem = async (id) => {
+        try {
+            const response = await axios.delete(`${api}/${id}`);
+            if(response) {
+                dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: id});
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const moveAndDelete = async (product) => {
+        const cartApi = 'https://ecommerce-backend.sauravkumar007.repl.co/carts';
+        try {
+            deleteWishlistItem(product._id);
+            await axios.post(cartApi, { _id: product._id, quantity: 1 });
+            dispatchCart({ type: "ADD_TO_CART", payload: product});
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     function EmptyWishlist(){
         return(
@@ -20,9 +49,9 @@ export function WishList(){
         return(
             <>
                 <h2 style={{color: "rgb(68, 69, 74)", fontSize: "2rem", margin: "0 1rem 1rem 1rem"}}>My Wishlist</h2>
-                {itemsInWishList.map(item => {
+                {wishlist.map(item => {
                 return(
-                    <div className="wishlist" key={item.id}>
+                    <div className="wishlist" key={item._id}>
                         <img src={item.image} alt={item.name}/>
                         <div className="cart-details">
                                 <div>
@@ -36,20 +65,21 @@ export function WishList(){
                                 </div>
                                 <div className="cart-btns">
                                 {
-                                            cartState.itemsInCart.find(element => element.id === item.id) ? 
-                                            null
+                                            cart.find(element => element._id === item._id) ? 
+                                            <button className={ "text-icon-btn out-of-stock"}
+                                                disabled={true} >
+                                                <i className="fas fa-shopping-cart"></i>
+                                                Already In Cart
+                                            </button>
                                             : 
                                             <button className={ item.inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
                                                 disabled={!item.inStock} 
-                                                onClick={ () => {
-                                                    dispatchCart({type: "ADD_TO_CART", payload: item});
-                                                    dispatchCart({type: "REMOVE_FROM_WISHLIST", payload: item.id});
-                                                    }}>
+                                                onClick={ () => moveAndDelete(item)}>
                                                 <i className="fas fa-shopping-cart"></i>
-                                                Move To Cart
+                                                {item.inStock ? "Move To Cart" : "Out of Stock"}
                                             </button>
                                         }
-                                    <button className="secondary-btn" onClick={() => dispatchCart({type: "REMOVE_FROM_WISHLIST", payload: item.id})}>Remove From Wishlist</button>
+                                    <button className="secondary-btn" onClick={ () => deleteWishlistItem(item._id) }>Remove From Wishlist</button>
                                 </div>
                                 
                         </div>
@@ -65,7 +95,7 @@ export function WishList(){
         <>
         <Navbar/>
         <div className="wishlist-container">
-            { itemsInWishList.length === 0 ? <EmptyWishlist/> : <WishlistItem/> }
+            { wishlist.length === 0 ? <EmptyWishlist/> : <WishlistItem/> }
         </div>
     </>
     )    
