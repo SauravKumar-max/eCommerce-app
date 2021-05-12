@@ -1,5 +1,4 @@
-export { ProductNavbar } from "./Navbars/Product-Navbar";
-export { Navbar } from "./Navbars/Navbar";
+export { Navbar } from "./Navbar";
 export { FilterBox } from "./FilterBox";
 export { ProductCard } from "./ProductCard";
 export { ProductPage } from "./ProductPage"
