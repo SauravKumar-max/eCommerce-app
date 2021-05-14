@@ -188,6 +188,8 @@
 }
 
 .price-range input{
+  width: 200px;
+  height: 3px;
   margin: 0 1rem;
 }
 
