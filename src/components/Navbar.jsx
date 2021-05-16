@@ -1,9 +1,8 @@
 import { useProduct } from "../context/product-context"
 import { useCart } from "../context/cart-context";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useWishlist } from "../context/wishlist-context";
 import { useLocation } from "react-router-dom";
-
 
 export function Navbar(){
     const {state, dispatch} = useProduct();
@@ -12,11 +11,11 @@ export function Navbar(){
     const { wishlist } = wishlistState;
     const { cart } = cartState;
     const location = useLocation();
-    
+
     return(
         <div>
             <nav className="navbar">
-                <Link to="/" className="home-link"> MyMart </Link>
+                <Link to="/" className="home-link" onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}> MyMart </Link>
 
                 <div className="hamburger">
                     <div></div>
@@ -36,19 +35,22 @@ export function Navbar(){
                     null 
                     }
                     <li>
-                        <Link to="/products">Products</Link>
+                        <NavLink to="/products"
+                            onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}>
+                                Products
+                        </NavLink>
                     </li>
                     <li>
-                        <Link to="/cart" className="nav-link">
+                        <NavLink to="/cart" className="nav-link" onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}>
                             Cart 
                             { cart.length > 0 && <span className="items-count">{ cart.length }</span> } 
-                        </Link>
+                        </NavLink>
                     </li>
                     <li>
-                        <Link to="/wishlist" className="nav-link">
+                        <NavLink to="/wishlist" className="nav-link" onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}>
                             WishList 
                             { wishlist.length > 0 && <span className="items-count">{ wishlist.length }</span> }
-                        </Link>
+                        </NavLink>
                     </li>
                 </ul>
             </nav>
