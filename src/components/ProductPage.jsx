@@ -16,9 +16,12 @@ export function ProductPage(){
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
     const addToWishlist = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
             await axios.post(api, { _id: product._id});
-            dispatchWishlist({type: "ADD_TO_WISHLIST", payload: product})
+            dispatchWishlist({type: "ADD_TO_WISHLIST", payload: product});
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} added to Wishlist`});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
@@ -78,7 +81,12 @@ export function ProductPage(){
                             
                             { 
                                 cart.find(element => element._id === _id) ? 
-                                    <Link to="/cart"  onClick={() => dispatch({type: "HIDE_PRODUCT", payload: null})} className="secondary-link"><i className="fas fa-arrow-right"></i> Go to Cart</Link>
+                                    <Link to="/cart"  
+                                        onClick={() => dispatch({type: "HIDE_PRODUCT", payload: null})} 
+                                        className="secondary-link">
+                                        <i className="fas fa-arrow-right"></i> 
+                                        Go to Cart
+                                    </Link>
                                     : 
                                     <AddToCartBtn item={state.item}/>
                             }                            

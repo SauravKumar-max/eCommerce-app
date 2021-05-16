@@ -6,11 +6,12 @@ import { useWishlist } from "../context/wishlist-context";
 import axios from "axios";
 
 export function ProductCard(){
-    const { data, state, dispatch } = useProduct();
+    const { loader, data, state, dispatch } = useProduct();
     const { cartState } = useCart();
     const { cart } = cartState;
     const { wishlistState, dispatchWishlist } = useWishlist();
     const { wishlist } = wishlistState;
+    const emptyLoaderArray = [...Array(8)];
 
     function getSortedData(productData, sortBy){
         if(sortBy === "LOW_TO_HIGH"){
@@ -45,10 +46,13 @@ export function ProductCard(){
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
 
-    const removewishlist = async (id) => {
+    const removewishlist = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
-            await axios.delete(`${api}/${id}`);
-            dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: id });
+            await axios.delete(`${api}/${product._id}`);
+            dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: product._id });
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} removed from Wishlist`});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
@@ -56,9 +60,12 @@ export function ProductCard(){
 
 
     const addToWishlist = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
             axios.post(api, {_id: product._id});
             dispatchWishlist({ type: "ADD_TO_WISHLIST", payload: product });
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} added to Wishlist`});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error)
         }
@@ -70,14 +77,14 @@ export function ProductCard(){
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: "2rem"
             }}>
+            {loader && emptyLoaderArray.map((element, i) => <span key={i} className="loading-box"></span>)}
             {filteredData === [] ? <h2>No Data Found</h2> : filteredData.map(item => {
                 return(
-                    
                     <div style={{ border: "solid 1px #adadad" }} key={item._id} className="card-bdg">
                         <img onClick={ () => dispatch({type: "SHOW_PRODUCT", payload: item}) } className="card-img" src={item.image} alt={item.name}/>
                         <div className="wishlist-heart">
                             <p>{wishlist.find(element => element._id === item._id) ?
-                              <i onClick={() => removewishlist(item._id) } className="fas fa-heart"></i> 
+                              <i onClick={() => removewishlist(item) } className="fas fa-heart"></i> 
                               : 
                               <i onClick={() => addToWishlist(item)} className="far fa-heart"></i>}
                             </p>

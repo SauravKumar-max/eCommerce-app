@@ -3,22 +3,26 @@ import { Navbar } from "./index";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/wishlist-context";
 import axios from "axios";
+import { useProduct } from "../context/product-context";
 
 
 export function Cart(){
-    
+    const { dispatch } = useProduct();
     const { cartState, dispatchCart } = useCart();
     const { cart } = cartState;
     const { wishlistState, dispatchWishlist } = useWishlist();
     const { wishlist } = wishlistState;
-    const reducer = ( acc, val ) => acc + parseInt(val.price, 10) * parseInt(val.quantity, 10); 
-    const totalPrice = cart.reduce(reducer, 0);
+    const priceReducer = ( acc, val ) => acc + parseInt(val.price, 10) * parseInt(val.quantity, 10); 
+    const totalPrice = cart.reduce(priceReducer, 0);
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
-    const deleteCartItem = async (id) => {
+    const deleteCartItem = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
-            await axios.delete(`${api}/${id}`);
-            dispatchCart({ type: "DELETE_FROM_CART", payload: id });
+            await axios.delete(`${api}/${product._id}`);
+            dispatchCart({ type: "DELETE_FROM_CART", payload: product._id });
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} successfully removed from Cart `});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
@@ -26,18 +30,24 @@ export function Cart(){
     }
 
     const increaseQty = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
             await axios.post(`${api}/${product._id}` , { quantity: product.quantity + 1 });
             dispatchCart({type: "INCREASE_QUANTITY", payload: product._id});
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} Quantity increased. `});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
     }
 
     const decreaseQty = async (product) => {
+        dispatch({type: "LOAD_LOADER"});
         try {
             await axios.post(`${api}/${product._id}`, { quantity: product.quantity - 1 });
             dispatchCart({type: "DECREASE_QUANTITY", payload: product._id});
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} Quantity decreased `});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
@@ -45,9 +55,12 @@ export function Cart(){
 
     const addToWishlist = async (product) => {
         const wishApi = 'https://ecommerce-backend.sauravkumar007.repl.co/wishlists';
+        dispatch({type: "LOAD_LOADER"});
         try {
             axios.post(wishApi, {_id: product._id});
             dispatchWishlist({ type: "ADD_TO_WISHLIST", payload: product });
+            dispatch({type: "SHOW_TOAST", payload: `${product.name} added to Wishlist`});
+            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error)
         }
@@ -90,7 +103,7 @@ export function Cart(){
                                         <p className="text-quantity">quantity: </p>
                                         {
                                             item.quantity === 1 ? 
-                                            <button className="minus-btn" onClick={() => deleteCartItem(item._id)}><i className="far fa-trash-alt"></i></button> : 
+                                            <button className="minus-btn" onClick={() => deleteCartItem(item)}><i className="far fa-trash-alt"></i></button> : 
                                             <button className="minus-btn" onClick={ () => decreaseQty(item)}><i className="fas fa-minus"></i></button>
 
                                         }
@@ -106,14 +119,14 @@ export function Cart(){
                                                 Go to Wishlist
                                             </Link>
                                             : 
-                                            <button className={ item.inStock ? "text-icon-btn" : "text-icon-btn out-of-stock"}
+                                            <button className="text-icon-btn"
                                                 disabled={!item.inStock} 
                                                 onClick={ () => addToWishlist(item)}>
-                                                <i className="far fa-shopping-heart"></i>
+                                                <i className="far fa-heart"></i>
                                                 Add To Wishlist
                                             </button>
                                         }
-                                        <button className="secondary-btn" onClick={() => deleteCartItem(item._id)}><i className="far fa-trash-alt"></i>Remove From Cart</button>
+                                        <button className="secondary-btn" onClick={() => deleteCartItem(item)}><i className="far fa-trash-alt"></i>Remove From Cart</button>
                                     </div>
                                 </div>
                             </div>
