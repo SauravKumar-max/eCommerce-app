@@ -30,7 +30,18 @@ export const productReducer = (state, action) => {
 
         case "TOGGLE_FILTERS": 
             return {...state, toggleFilter: !state.toggleFilter};
+
+        case "SHOW_TOAST":
+            return { ...state, toast: {...state.toast, toShow: true, message: action.payload }  }
  
+        case "HIDE_TOAST":
+          return { ...state, toast: {...state.toast, toShow: false, message: "toast hidden"}}
+
+        case "LOAD_LOADER":
+          return { ...state, screenLoader: true };
+
+        case "HIDE_LOADER":
+          return { ...state, screenLoader: false };
 
         default:
           return state;
