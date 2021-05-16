@@ -8,3 +8,4 @@ export { Home } from "./Home";
 export { ErrorPage } from  "./ErrorPage";
 export { AddToCartBtn } from "./AddToCartBtn";
 export { Products } from "./AllProductsPage";
+export { Toast } from "./Toast";
