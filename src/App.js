@@ -1,4 +1,5 @@
-import { Home, Navbar, Cart, WishList, ErrorPage, Products, Toast} from "./components/index";
+import {  Navbar, ErrorPage, Toast} from "./components/index";
+import { Home, Cart, WishList, Products} from "./pages/index";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import { useProduct } from "./context/product-context";

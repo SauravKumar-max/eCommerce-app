@@ -1,10 +1,10 @@
-import { useCart } from "../context/cart-context";
-import { Navbar } from "./index"
+import { useCart } from "../../context/cart-context";
+import { Navbar } from "../../components/index"
 import { Link } from "react-router-dom";
-import { useWishlist } from "../context/wishlist-context";
+import { useWishlist } from "../../context/wishlist-context";
 // import { useEffect } from "react";
 import axios from "axios";
-import { useProduct } from "../context/product-context";
+import { useProduct } from "../../context/product-context";
 
 export function WishList(){
     const { dispatch } = useProduct();

@@ -1,11 +1,6 @@
 export { Navbar } from "./Navbar";
 export { FilterBox } from "./FilterBox";
 export { ProductCard } from "./ProductCard";
-export { ProductPage } from "./ProductPage"
-export { Cart } from "./Cart";
-export { WishList } from "./Wishlist";
-export { Home } from "./Home";
 export { ErrorPage } from  "./ErrorPage";
 export { AddToCartBtn } from "./AddToCartBtn";
-export { Products } from "./AllProductsPage";
 export { Toast } from "./Toast";

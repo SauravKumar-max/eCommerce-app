@@ -2,7 +2,7 @@ import { useCart } from "../context/cart-context";
 import { Link } from "react-router-dom";
 import { useProduct } from "../context/product-context";
 import { useWishlist } from "../context/wishlist-context";
-import { AddToCartBtn } from "./index";
+import { AddToCartBtn } from "../components/index";
 import axios from "axios";
  
 export function ProductPage(){

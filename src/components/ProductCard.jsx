@@ -72,11 +72,7 @@ export function ProductCard(){
     }
 
     return(
-        <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "2rem"
-            }}>
+        <div className="all-products">
             {loader && emptyLoaderArray.map((element, i) => <span key={i} className="loading-box"></span>)}
             {filteredData === [] ? <h2>No Data Found</h2> : filteredData.map(item => {
                 return(

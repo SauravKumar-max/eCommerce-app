@@ -28,7 +28,7 @@ export function Navbar(){
                         <input onChange={(e)=> dispatch({type: "SEARCH", payload: e.target.value})} 
                             value={ state.searchInputValue }
                             className="search-box" 
-                            type="text" 
+                            type="search" 
                             placeholder="Search"/>
                     </li> 
                     : 
