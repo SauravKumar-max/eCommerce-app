@@ -1,5 +1,4 @@
 import { useCart } from "../../context/cart-context";
-import { Navbar } from "../../components/index";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/wishlist-context";
 import axios from "axios";
@@ -16,6 +15,7 @@ export function Cart(){
     const totalPrice = cart.reduce(priceReducer, 0);
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
+
     const deleteCartItem = async (product) => {
         dispatch({type: "LOAD_LOADER"});
         try {
@@ -161,7 +161,6 @@ export function Cart(){
 
     return (
             <>
-                <Navbar/>
                 {cart.length === 0 ? <EmptyCart/> : <CartItems/>}
             </>
             

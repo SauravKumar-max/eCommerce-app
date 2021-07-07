@@ -1,8 +1,6 @@
 import { useCart } from "../../context/cart-context";
-import { Navbar } from "../../components/index"
 import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/wishlist-context";
-// import { useEffect } from "react";
 import axios from "axios";
 import { useProduct } from "../../context/product-context";
 
@@ -14,6 +12,7 @@ export function WishList(){
     const { wishlist } = wishlistState;
 
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
+
     const deleteWishlistItem = async (product) => {
         dispatch({type: "LOAD_LOADER"});
         try {
@@ -102,12 +101,9 @@ export function WishList(){
 
     
     return(
-        <>
-        <Navbar/>
         <div className="wishlist-container">
-            { wishlist.length === 0 ? <EmptyWishlist/> : <WishlistItem/> }
+            { wishlist.length === 0 ? <EmptyWishlist/> :  <WishlistItem/> }
         </div>
-    </>
     )    
             
 }
