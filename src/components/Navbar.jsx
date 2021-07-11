@@ -3,6 +3,7 @@ import { useCart } from "../context/cart-context";
 import { Link, NavLink } from "react-router-dom";
 import { useWishlist } from "../context/wishlist-context";
 import { useLocation } from "react-router-dom";
+import { ProfileCard } from "./ProfileCard";
 
 export function Navbar(){
     const {state, dispatch} = useProduct();
@@ -11,6 +12,8 @@ export function Navbar(){
     const { wishlist } = wishlistState;
     const { cart } = cartState;
     const location = useLocation();
+
+    
 
     return(
         <div>
@@ -41,7 +44,11 @@ export function Navbar(){
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/cart" className="nav-link" onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}>
+                        <NavLink 
+                            to="/cart" 
+                            className="nav-link" 
+                            onClick={() => dispatch({type: "HIDE_TOAST", payload: "Hide after route changed!"})}
+                        >
                             Cart 
                             { cart.length > 0 && <span className="items-count">{ cart.length }</span> } 
                         </NavLink>
@@ -52,8 +59,17 @@ export function Navbar(){
                             { wishlist.length > 0 && <span className="items-count">{ wishlist.length }</span> }
                         </NavLink>
                     </li>
+
+                    <li>
+                        <span style={{fontSize: "1.4rem"}}>
+                            <i onClick={ () => dispatch({ type: "TOGGLEPROFILE"}) } 
+                                className="fas fa-user-circle">
+                            </i>
+                        </span>
+                    </li>
                 </ul>
             </nav>
+            { state.profileToggler && <ProfileCard/> }
         </div>
     )
 }
