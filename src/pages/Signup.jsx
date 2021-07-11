@@ -1,10 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../components";
+import { useAuth } from "../context/auth-context";
 
 export function SingUp(){
     const [ inputs, setInputs ] = useState({ name: "", username: "", email: "", password: "", confirmPassword: ""})
     const [ checkForm, setCheckForm ] = useState(false);
+    const [ showPassword, setShowPassword ] = useState(false);
+    const [ spinner, setSpinner ] = useState(false);
+    const { loginUserWithCredentials } = useAuth();
     const navigate = useNavigate();
 
 
@@ -19,10 +24,13 @@ export function SingUp(){
         
     
     async function newUserSignUp(){
+        setSpinner(true);
         try {
             const api = "https://ecommerce-backend.sauravkumar007.repl.co/user";
-            await axios.post(api, { name: inputs.name, username: inputs.username, email: inputs.email, password: inputs.password })
-            navigate('/login');
+            const response = await axios.post(api, { name: inputs.name.toUpperCase(), username: inputs.username, email: inputs.email, password: inputs.password });
+            if(response.status === 200){
+                loginUserWithCredentials(inputs.email, inputs.password);
+            }
         } catch (error) {
             console.log(error);
         }  
@@ -50,12 +58,19 @@ export function SingUp(){
                 placeholder="Email"
                 onChange={(e) => setInputs(input => ({ ...input, email: e.target.value}))} 
             />
-            <input 
-                className="text-input" 
-                type="password" 
-                placeholder="Password"
-                onChange={(e) => setInputs(input => ({ ...input, password: e.target.value}))}
-            />
+    
+            <div className="password-field">
+                <input 
+                    className="text-input" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="Password"
+                    onChange={(e) => setInputs(input => ({ ...input, password: e.target.value}))}
+                />
+                { showPassword && <i className="fas fa-eye" onClick={() => setShowPassword(false)}></i> }
+                { !showPassword && <i className="fas fa-eye-slash" onClick={() => setShowPassword(true)}></i> }
+
+            </div>
+            
             <input 
                 className="text-input" 
                 type="password" 
@@ -67,7 +82,7 @@ export function SingUp(){
                 className={!checkForm ? "primary-btn disabled-btn": "primary-btn" }
                 onClick={ newUserSignUp }
             >
-                Sign Up
+                { spinner ? <Loader color={"#fff"}/> : "Sign Up" }
             </button>
             <small>Already have an account. <span onClick={() => navigate('/login')}> Login </span> </small>
         </div>
