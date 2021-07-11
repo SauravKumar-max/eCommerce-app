@@ -3,36 +3,24 @@ import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/wishlist-context";
 import axios from "axios";
 import { useProduct } from "../../context/product-context";
+import { ConfirmRemoveModal } from "../../components";
 
 export function WishList(){
     const { dispatch } = useProduct();
     const { cartState, dispatchCart } = useCart();
     const { wishlistState, dispatchWishlist } = useWishlist();
-    const { cart } = cartState;
+    const { cart, confirmModal } = cartState;
     const { wishlist } = wishlistState;
 
-    const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
-
-    const deleteWishlistItem = async (product) => {
-        dispatch({type: "LOAD_LOADER"});
-        try {
-            const response = await axios.delete(`${api}/${product._id}`);
-            if(response) {
-                dispatch({type: "HIDE_LOADER"});
-                dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: product._id});
-                dispatch({type: "SHOW_TOAST", payload: `${product.name} successfully removed from Wishlist`});
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
+    
     const moveAndDelete = async (product) => {
         dispatch({type: "LOAD_LOADER"});
         const cartApi = 'https://ecommerce-backend.sauravkumar007.repl.co/carts';
+        const wishlistApi = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
         try {
-            deleteWishlistItem(product);
             await axios.post(cartApi, { _id: product._id, quantity: 1 });
+            await axios.delete(`${wishlistApi}/${product._id}`);
+            dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: product._id});
             dispatchCart({ type: "ADD_TO_CART", payload: product});
             dispatch({type: "SHOW_TOAST", payload: `${product.name} Moved to Cart`});
             dispatch({type: "HIDE_LOADER"});
@@ -86,7 +74,7 @@ export function WishList(){
                                         </button>
                                 }
                                     <button className="secondary-btn" 
-                                        onClick={ () => deleteWishlistItem(item) }>
+                                        onClick={() => dispatchCart({type: "SHOW_CONFIRM_MODAL", payload: item})}   >
                                             Remove From Wishlist
                                     </button>
                                 </div>
@@ -103,6 +91,7 @@ export function WishList(){
     return(
         <div className="wishlist-container">
             { wishlist.length === 0 ? <EmptyWishlist/> :  <WishlistItem/> }
+            { confirmModal && <ConfirmRemoveModal from={"wishlist"}/> }
         </div>
     )    
             
