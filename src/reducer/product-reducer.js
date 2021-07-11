@@ -43,6 +43,9 @@ export const productReducer = (state, action) => {
         case "HIDE_LOADER":
           return { ...state, screenLoader: false };
 
+        case "TOGGLEPROFILE": 
+          return { ...state, profileToggler: !state.profileToggler };
+
         default:
           return state;
       }
