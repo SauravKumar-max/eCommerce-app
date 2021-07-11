@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/auth-context"
+import { Loader } from "../components";
 
 export function Login(){
-    const { loginUserWithCredentials } = useAuth();
-    const [ username, setUsername ] = useState("");
+    const { loginUserWithCredentials, spinner } = useAuth();
+    const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ checkForm, setCheckForm ] = useState(false);
+    const [ showPassword, setShowPassword ] = useState(false);
     const navigate = useNavigate();
-
+    
 
     function loginHandler(){
-        loginUserWithCredentials( username, password );
+        loginUserWithCredentials( email, password );
     }
 
     useEffect(() => {
-        if(username !== "" && password !== ""){
+        if(email !== "" && password !== ""){
             return setCheckForm(true);
         } return setCheckForm(false);
-    }, [ username, password])
+    }, [ email, password])
 
 
     return(
@@ -28,26 +30,33 @@ export function Login(){
 
             <input 
                 className="text-input"
-                value={username} 
-                type="text" 
-                placeholder="UserName" 
-                onChange={(e) => setUsername(e.target.value)} 
+                value={email} 
+                type="email" 
+                placeholder="Email" 
+                onChange={(e) => setEmail(e.target.value)} 
             />
 
-            <input 
-                className="text-input" 
-                value={password}
-                type="password" 
-                placeholder="Password"
-                onChange={(e) => setPassword( e.target.value)} 
-            />
+            <div className="password-field">
+
+                <input 
+                    className="text-input" 
+                    value={ password }
+                    type={ showPassword ? "text" : "password" } 
+                    placeholder="Password"
+                    onChange={(e) => setPassword( e.target.value)} 
+                />
+
+                { showPassword && <i className="fas fa-eye" onClick={() => setShowPassword(false)}></i> }
+                { !showPassword && <i className="fas fa-eye-slash" onClick={() => setShowPassword(true)}></i> }
+
+            </div>
 
             <button 
                 className={ checkForm ? "primary-btn" : "primary-btn disabled-btn" } 
                 disabled={ !checkForm }
                 onClick={ loginHandler }
             > 
-                Login 
+                {spinner ? <Loader color={"#fff"}/> : "Login" }
             </button>
              <small>Don't have an account. <span onClick={() => navigate('/signup')}> SignUp </span> </small>
         </div>
