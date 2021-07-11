@@ -1,29 +1,31 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { cartReducer } from "../reducer/cart-reducer";
-
+import axios from "axios";
+import { useAuth } from "./auth-context";
 
 const Cart = createContext();
 
 export function CartProvider({ children }){
+    const { token } = useAuth();
+    const [ cartState, dispatchCart ] = useReducer(cartReducer, { cart: [], confirmModal: false, itemToRemove: null });
 
-
-    const [ cartState, dispatchCart ] = useReducer(cartReducer, { cart: [] })
-
-    const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
     useEffect(() => {
         (async () => {
-            try {
-                const response = await axios.get(api);
-                const fetchCart = response.data.cart;
-                dispatchCart({type: "CART_DATA", payload: fetchCart});
-            } catch (error) {
-                console.error(error);
+            if(token){
+                try{
+                    const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
+                    const response = await axios.get(api);
+                    const fetchCart = response.data.userCart;
+                    dispatchCart({type: "CART_DATA", payload: fetchCart});
+                } catch (error) {
+                   if(error.response.status === 401){
+                        console.error("some-thing is wrong!", error)
+                   }
+                }
             }
         })()
-    },[])
+    }, [token]);
 
-    
     return (
         <Cart.Provider value={{ cartState, dispatchCart }}>
             {children}
