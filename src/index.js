@@ -6,20 +6,23 @@ import reportWebVitals from './reportWebVitals';
 import { ProductProvider } from "./context/product-context";
 import { CartProvider } from "./context/cart-context";
 import { WishlistProvider } from "./context/wishlist-context";
+import { AuthProvider } from "./context/auth-context";
 import { BrowserRouter as Router } from "react-router-dom";
 
 
 ReactDOM.render(
   <React.StrictMode> 
-    <ProductProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <Router>
-            <App />
-          </Router>
-        </WishlistProvider>
-      </CartProvider>
-    </ProductProvider>
+    <Router>
+      <AuthProvider>
+        <ProductProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <App />
+            </WishlistProvider>
+          </CartProvider>
+        </ProductProvider>
+      </AuthProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
