@@ -1,16 +1,19 @@
 import { useProduct } from "../context/product-context";
 import { useCart } from "../context/cart-context";
 import { AddToCartBtn } from "./index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useWishlist } from "../context/wishlist-context";
 import axios from "axios";
+import { useAuth } from "../context/auth-context";
 
 export function ProductCard(){
     const { loader, data, state, dispatch } = useProduct();
-    const { cartState } = useCart();
-    const { cart } = cartState;
     const { wishlistState, dispatchWishlist } = useWishlist();
+    const { cartState } = useCart();
+    const { login } = useAuth();
+    const { cart } = cartState;
     const { wishlist } = wishlistState;
+    const navigate = useNavigate();
     const emptyLoaderArray = [...Array(8)];
 
     function getSortedData(productData, sortBy){
@@ -47,12 +50,10 @@ export function ProductCard(){
     const api = "https://ecommerce-backend.sauravkumar007.repl.co/wishlists";
 
     const removewishlist = async (product) => {
-        dispatch({type: "LOAD_LOADER"});
+        dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: product._id });
+        dispatch({type: "SHOW_TOAST", payload: `${product.name} removed from Wishlist`});
         try {
             await axios.delete(`${api}/${product._id}`);
-            dispatchWishlist({type: "DELETE_FROM_WISHLIST", payload: product._id });
-            dispatch({type: "SHOW_TOAST", payload: `${product.name} removed from Wishlist`});
-            dispatch({type: "HIDE_LOADER"});
         } catch (error) {
             console.log(error);
         }
@@ -82,7 +83,7 @@ export function ProductCard(){
                             <p>{wishlist.find(element => element._id === item._id) ?
                               <i onClick={() => removewishlist(item) } className="fas fa-heart"></i> 
                               : 
-                              <i onClick={() => addToWishlist(item)} className="far fa-heart"></i>}
+                              <i onClick={() => {login ? addToWishlist(item) : navigate('/login') }} className="far fa-heart"></i>}
                             </p>
                         </div>
                         <div className="card-info" style={{padding: "0.5rem 1rem 0 1rem"}}>
