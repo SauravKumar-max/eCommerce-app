@@ -37,8 +37,9 @@ export function ProductProvider({children}){
                 toShow: false,
                 message: "toast message will be here." 
             },
-           screenLoader: false, 
-            
+          screenLoader: false, 
+          profileToggler: false,
+        
         }
     
 
