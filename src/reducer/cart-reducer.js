@@ -17,6 +17,11 @@ export function cartReducer(cartState, action ){
         case "DECREASE_QUANTITY": 
             return {...cartState, cart: cartState.cart.map(item => item._id === action.payload ? {...item, quantity: item.quantity - 1} : item)};
 
+        case "SHOW_CONFIRM_MODAL": 
+            return {...cartState, confirmModal: true, itemToRemove: action.payload };
+
+        case "HIDE_CONFIRM_MODAL": 
+            return { ...cartState, confirmModal: false };
         default:
             break;
     }
