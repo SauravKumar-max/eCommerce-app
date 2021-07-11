@@ -1,6 +1,6 @@
 import { useProduct } from "../context/product-context";
 import { FilterBox, ProductCard } from "../components/index";
-import { ProductPage } from "./index";
+import { ProductPage } from "../components/index";
 
 export function Products(){
     const { state } = useProduct();
