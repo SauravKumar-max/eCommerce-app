@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/wishlist-context";
 import axios from "axios";
 import { useProduct } from "../../context/product-context";
+import { AddToWishlistBtn, ConfirmRemoveModal } from "../../components";
 
 
 export function Cart(){
     const { dispatch } = useProduct();
     const { cartState, dispatchCart } = useCart();
-    const { cart } = cartState;
-    const { wishlistState, dispatchWishlist } = useWishlist();
+    const { cart, confirmModal } = cartState;
+    const { wishlistState } = useWishlist();
     const { wishlist } = wishlistState;
     const priceReducer = ( acc, val ) => acc + parseInt(val.price, 10) * parseInt(val.quantity, 10); 
     const totalPrice = cart.reduce(priceReducer, 0);
@@ -19,6 +20,7 @@ export function Cart(){
     const deleteCartItem = async (product) => {
         dispatch({type: "LOAD_LOADER"});
         try {
+            const api = "https://ecommerce-backend.sauravkumar007.repl.co/carts";
             await axios.delete(`${api}/${product._id}`);
             dispatchCart({ type: "DELETE_FROM_CART", payload: product._id });
             dispatch({type: "SHOW_TOAST", payload: `${product.name} successfully removed from Cart `});
@@ -26,7 +28,6 @@ export function Cart(){
         } catch (error) {
             console.log(error);
         }
-
     }
 
     const increaseQty = async (product) => {
@@ -52,20 +53,6 @@ export function Cart(){
             console.log(error);
         }
     }
-
-    const addToWishlist = async (product) => {
-        const wishApi = 'https://ecommerce-backend.sauravkumar007.repl.co/wishlists';
-        dispatch({type: "LOAD_LOADER"});
-        try {
-            axios.post(wishApi, {_id: product._id});
-            dispatchWishlist({ type: "ADD_TO_WISHLIST", payload: product });
-            dispatch({type: "SHOW_TOAST", payload: `${product.name} added to Wishlist`});
-            dispatch({type: "HIDE_LOADER"});
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
 
 
     function EmptyCart(){
@@ -103,30 +90,48 @@ export function Cart(){
                                         <p className="text-quantity">quantity: </p>
                                         {
                                             item.quantity === 1 ? 
-                                            <button className="minus-btn" onClick={() => deleteCartItem(item)}><i className="far fa-trash-alt"></i></button> : 
-                                            <button className="minus-btn" onClick={ () => decreaseQty(item)}><i className="fas fa-minus"></i></button>
+                                            <button 
+                                                className="minus-btn" 
+                                                onClick={() => deleteCartItem(item)}
+                                            >
+                                                <i className="far fa-trash-alt"></i>
+                                            </button> 
+                                            : 
+                                            <button 
+                                                className="minus-btn" 
+                                                onClick={ () => decreaseQty(item)}
+                                            >
+                                                <i className="fas fa-minus"></i>
+                                            </button>
 
                                         }
                                         <p className="quantity">{item.quantity}</p>
-                                        <button className="plus-btn" onClick={() => increaseQty(item)}><i className="fas fa-plus"></i></button>
+                                        <button 
+                                            className="plus-btn" 
+                                            onClick={() => increaseQty(item)}
+                                        >
+                                            <i className="fas fa-plus"></i>
+                                        </button>
 
                                     </div>
                                     <div className="cart-btns">
                                         {
                                             wishlist.find(element => element._id === item._id) ? 
-                                            <Link to="/wishlist" className="secondary-link">
+                                            <Link to="/wishlist" 
+                                                className="primary-link"
+                                            >
                                                 <i className="fas fa-arrow-right"></i> 
                                                 Go to Wishlist
                                             </Link>
                                             : 
-                                            <button className="text-icon-btn"
-                                                disabled={!item.inStock} 
-                                                onClick={ () => addToWishlist(item)}>
-                                                <i className="far fa-heart"></i>
-                                                Add To Wishlist
-                                            </button>
+                                            <AddToWishlistBtn item={ item }/>
                                         }
-                                        <button className="secondary-btn" onClick={() => deleteCartItem(item)}><i className="far fa-trash-alt"></i>Remove From Cart</button>
+                                        <button className="text-icon-btn" 
+                                            onClick={() => dispatchCart({type: "SHOW_CONFIRM_MODAL", payload: item})}
+                                        >
+                                            <i className="far fa-trash-alt"></i>
+                                            Remove From Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -162,6 +167,7 @@ export function Cart(){
     return (
             <>
                 {cart.length === 0 ? <EmptyCart/> : <CartItems/>}
+                { confirmModal && <ConfirmRemoveModal from={"cart"}/> }
             </>
             
     )
