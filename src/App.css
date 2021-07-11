@@ -4,6 +4,100 @@
   box-sizing: border-box;
 }
 
+/* Login */
+
+.login-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 25rem;
+  margin: 10rem auto;
+  padding: 0.5rem 0;
+  border: 1px solid rgb(173, 173, 173);
+  box-shadow: 0 0 10px rgba(31, 31, 39, 0.2);
+}
+
+.disabled-btn{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-container input{
+  width: 90%;
+  margin: 0.5rem 0;
+}
+
+.login-container button{
+  margin: 0.5rem 0;
+  width: 90%;
+}
+
+.login-container h2{
+  margin: 0.5rem 0;
+  color: rgb(68, 69, 74);
+}
+
+.login-container small{
+  color: rgba(68, 69, 74, 0.767);
+  font-weight: bold;
+  margin: 0.5rem;
+}
+
+.login-container span{
+  color: #3d41d7;
+  cursor: pointer;
+}
+
+
+.password-field{
+  position: relative;
+  width: 90%;
+}
+
+.password-field input{
+  width: 100%;
+  padding-right: 2rem;
+}
+
+.password-field i{
+  position: absolute;
+  top: 1.25rem;
+  right: 0.5rem;
+}
+
+/* Loader */
+.screen-loader{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: rgba(106, 106, 106, 0.6);
+}
+
+.loader{
+  width: 1.44rem;
+  height: 1.44rem;
+  border-radius: 50%;
+  margin: -2.5px auto;
+  animation: rotate 0.9s linear infinite;
+}
+
+@keyframes rotate{
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+
 /* Home  */
 
 .home-container{
@@ -155,6 +249,65 @@
   background: rgba(175, 187, 209, 0.219);
 }
 
+/*  Profile Card */
+
+.profile-container{
+  position: relative;
+}
+
+.profile-backdrop{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  background: transparent;
+}
+
+.profile-card{
+  position: fixed;
+  top: 5.2rem;
+  right: 0.7rem;
+  z-index: 5;
+  background: #fff;
+  padding: 1rem;
+  border: 1px solid rgb(173, 173, 173);
+  box-shadow: 0 0 6px rgb(31, 31, 39, 0.5);
+  width: 16rem;
+  height: 8rem;
+}
+
+.profile-card button{
+  width: 100%;
+}
+
+.user-info p{
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgb(68, 69, 74);
+}
+
+.user-info h3{
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: rgb(68, 69, 74);
+}
+
+.user-info span{
+  color: #3d42d7;
+  text-transform: uppercase;
+}
+
+.user-info button{
+  margin: 1rem 0 0 0;
+  width: 100%;
+}
+
+
+
+
+
 /* Toast */
 
 .toast-container{
@@ -271,8 +424,6 @@
   padding: 0rem;
   background: #fff;
   display: flex;
-  /* width: 62rem; */
-
 }
   
 .product-img{
@@ -578,15 +729,51 @@ button{
   font-size: 1.2rem;
 }
 
-.full-loader{
-  position: fixed;
-  top: 0;
-  z-index: 4;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.4);
+/* Confirm Remove Modal */
+
+.confirm-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.confirm-backdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: rgba(106, 106, 106, 0.6);
+}
+
+.confirm-modal{
+  width: 20rem;
+  position: fixed;
+  top: 45%;
+  z-index: 4;
+  padding: 1rem;
+  background: #fff;
+}
+
+.modal-text{
+  margin: 0 1.5rem 1rem 0.5rem;
+}
+
+.modal-text p{
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.confirm-modal-btns{
+  display: flex;
+  align-items: center;
+}
+
+.confirm-modal-btns button{
+  margin: 0 0.5rem;
+  width: 100%;
+}
 
 
 @media screen and (max-width: 770px){
@@ -602,16 +789,24 @@ button{
   .all-products{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    gap: 0.7rem;
     margin: 0 2rem 0 1rem ;
+  }
+
+  .login-container{
+    width: 22rem;
   }
 }
 
-/* @media screen and (max-width: 370px){
+@media screen and (max-width: 370px){
   .all-products{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 0.5rem;
-    margin: 0 1rem;
+    margin: 0 2rem;
   }
-} */
+
+  .login-container{
+    width: 20rem;
+  }
+}
