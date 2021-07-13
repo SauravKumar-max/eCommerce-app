@@ -1,17 +1,20 @@
 import { createContext, useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { decode } from "jsonwebtoken";
 import axios from "axios";
 
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }){
-    const { isUserLoggedIn, token: savedToken } = JSON.parse(localStorage?.getItem('login')) || { isUserLoggedIn: false, token: null };
+    const { isUserLoggedIn, token: savedToken } = JSON.parse(localStorage?.getItem('login')) || { isUserLoggedIn: false, token: null };    
     const [ login, setLogin ] = useState(isUserLoggedIn);
     const [ token, setToken ] = useState(savedToken);
     const [ spinner, setSpinner ] = useState(false);
     const { state } = useLocation();
     const navigate = useNavigate();
+    checkTokenExpiration();
+
    
     
     async function loginUserWithCredentials(email, password){
@@ -47,6 +50,16 @@ export function AuthProvider({ children }){
         setLogin(false);
         setToken(null);
         localStorage?.removeItem('login');
+    }
+
+    function checkTokenExpiration(){
+        if(token){
+            const { exp } = decode(token);
+            if(Date.now() >= exp * 1000){
+                return logout();
+            }
+        }
+        
     }
 
     setupAuthHeaderForServiceCalls(token);
