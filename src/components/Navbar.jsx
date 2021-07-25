@@ -25,15 +25,14 @@ export function Navbar(){
                 </div>
 
                 <ul className="navbar-lists">
-                    {location.pathname === "/products" ? <li>
+                    {location.pathname === "/products" &&
+                     <li>
                         <input onChange={(e)=> dispatch({type: "SEARCH", payload: e.target.value})} 
                             value={ state.searchInputValue }
                             className="search-box" 
                             type="search" 
-                            placeholder="Search"/>
-                    </li> 
-                    : 
-                    null 
+                            placeholder="Search" />
+                     </li> 
                     }
                     <li>
                         <NavLink to="/products"
