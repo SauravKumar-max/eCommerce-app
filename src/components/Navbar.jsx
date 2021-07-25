@@ -13,8 +13,6 @@ export function Navbar(){
     const { cart } = cartState;
     const location = useLocation();
 
-    
-
     return(
         <div>
             <nav className="navbar">
