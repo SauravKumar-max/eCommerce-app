@@ -29,8 +29,3 @@ export type CarouselContent = {
     image: string;
 }
 
-export type ExtraContent = {
-    image: string;
-    text: string;
-    offer: string;
-}
