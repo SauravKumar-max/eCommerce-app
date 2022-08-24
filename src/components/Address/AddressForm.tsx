@@ -1,7 +1,7 @@
 import { Stack, Button, Typography, TextField, Backdrop } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAuthCall } from "../../apiCalls/auth";
-import { inputStyle, modalBoxStyle } from "../../mui-styles";
+import { inputStyle, linkStyle, modalBoxStyle } from "../../mui-styles";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export type AddressFormProps = {
@@ -25,6 +25,18 @@ export function AddressForm({ setAddressOpen }: AddressFormProps): JSX.Element {
     }
     return setCheckForm(false);
   }, [name, phone, pincode, street, locality, city, state]);
+
+  function addDummyAddress() {
+    setName("Guest");
+    setPhone("07575454575");
+    setPincode("404356");
+    setLocality("Mumbai");
+    setCity("Mumbai");
+    setState("Maharashtra");
+    setStreet(
+      "5th Floor, Sahar Classic, Sahar Road/sahar Village, Opp P & T Colony"
+    );
+  }
   return (
     <Stack alignItems={"center"} direction={"column"} sx={modalBoxStyle}>
       <Backdrop
@@ -127,6 +139,9 @@ export function AddressForm({ setAddressOpen }: AddressFormProps): JSX.Element {
         value={state}
         onChange={(e) => setState(e.target.value)}
       />
+      <Typography sx={linkStyle} onClick={addDummyAddress}>
+        Fill Dummy Address
+      </Typography>
 
       <Button
         variant="contained"
