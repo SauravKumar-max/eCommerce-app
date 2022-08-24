@@ -28,4 +28,3 @@ export type Address = {
 export type CarouselContent = {
     image: string;
 }
-
