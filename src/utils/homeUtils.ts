@@ -2,12 +2,12 @@ import { CarouselContent } from "./utils.types";
 
 export const carouselContent: CarouselContent[] = [
     {
-        image: "https://peterengland.imgix.net/img/app/shopmedia/production/5/5-20-9176.jpg?w=1000&auto=format",
+        image: "https://s7ap1.scene7.com/is/image/adityabirlafashion/PE_D_HB_34?resMode=sharp2&wid=1600&hei=650",
     },
     {
-        image: "https://peterengland.imgix.net/img/app/shopmedia/production/5/5-20-9320.gif?w=1000&auto=format",
+        image: "https://s7ap1.scene7.com/is/image/adityabirlafashion/PE_D_HB_29_V2_Trousers?resMode=sharp2&wid=1600&hei=650",
     },
     {
-        image: "https://peterengland.imgix.net/img/app/shopmedia/production/5/5-20-8177.jpg?w=1000&auto=format",   
+        image: "https://s7ap1.scene7.com/is/image/adityabirlafashion/PE_D_HB_32?resMode=sharp2&wid=1600&hei=650",   
     }
 ]
