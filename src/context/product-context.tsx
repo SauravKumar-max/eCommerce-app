@@ -41,7 +41,7 @@ export function ProductProvider({ children }: Props) {
   useEffect(() => {
     (async function () {
       try {
-        const api = "https://ecommerce-backend.sauravkumar007.repl.co/products";
+        const api = process.env.REACT_APP_API_URL + "/products";
         const response = await axios.get(api);
         setProducts(response.data.products);
         setLoader(false);
