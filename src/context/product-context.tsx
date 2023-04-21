@@ -41,7 +41,7 @@ export function ProductProvider({ children }: Props) {
   useEffect(() => {
     (async function () {
       try {
-        const api = process.env.REACT_APP_API_URL + "/products";
+        const api = "https://blendmart-backend.onrender.com" + "/products";
         const response = await axios.get(api);
         setProducts(response.data.products);
         setLoader(false);

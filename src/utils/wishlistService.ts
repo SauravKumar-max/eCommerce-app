@@ -4,7 +4,7 @@ import { Wishlist } from "./utils.types";
 
 export async function getWishlist(): Promise<Wishlist | ServerError>{
     try{
-        const api = process.env.REACT_APP_API_URL + "/wishlists";
+        const api = "https://blendmart-backend.onrender.com" + "/wishlists";
         const response = await axios.get<Wishlist>(api);
         return response.data;
     }catch(error){

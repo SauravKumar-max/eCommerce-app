@@ -23,7 +23,7 @@ export function setupAuthHeaderForServiceCalls(token: string | null) {
 
 export async function getUser(): Promise<User | ServerError>{
   try{
-    const api = process.env.REACT_APP_API_URL + '/user';
+    const api = "https://blendmart-backend.onrender.com" + '/user';
     const response = await axios.get(api);
     return response.data;
   }catch (error){
