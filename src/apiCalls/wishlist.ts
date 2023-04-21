@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 export function useWishlistCall(){
-    const api = "https://blendmart-backend.onrender.com";
+    const api = process.env["REACT_APP_API_URL"];
     const { dispatchWishlist } = useWishlist();
     const { dispatchProduct } = useProduct();
     const { dispatchCart } = useCart();

@@ -8,7 +8,7 @@ export function useAuthCall(){
     const [loader, setLoader] = useState(false);
     const { authState, dispatchAuth } = useAuth();
     const {dispatchProduct} = useProduct()
-    const api = "https://blendmart-backend.onrender.com";
+    const api = process.env["REACT_APP_API_URL"];
     
     async function addAddress(newAddress:Omit<Address, "_id">, setAddressOpen:Dispatch<SetStateAction<boolean>>){
         setLoader(true);
