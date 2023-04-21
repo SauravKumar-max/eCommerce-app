@@ -4,7 +4,7 @@ import { Cart } from "./utils.types";
 
 export async function getCart(): Promise<Cart | ServerError>{
     try{
-        const api = process.env["REACT_APP_API_URL"] + "/carts";
+        const api = "https://blendmart-backend.onrender.com/carts";
         const response = await axios.get<Cart>(api);
         return response.data;
     }catch(error){
