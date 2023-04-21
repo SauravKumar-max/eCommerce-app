@@ -70,7 +70,7 @@ export function Signup(): JSX.Element {
   async function signupHandler() {
     setSpinner(true);
     try {
-      const api = process.env.REACT_APP_API_URL + "/user";
+      const api = "https://blendmart-backend.onrender.com" + "/user";
       const response = await axios.post(api, {
         name: inputValue.name.toUpperCase(),
         username: inputValue.username,

@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: JSX.Element }) {
   async function loginUserWithCredentials(email: string, password: string) {
     setSpinner(true);
     try {
-      const api = process.env.REACT_APP_API_URL + "/user/login";
+      const api = "https://blendmart-backend.onrender.com" + "/user/login";
       const response = await axios.post(api, { user: { email, password } });
       if (response.status === 200) {
         loginUser(response.data);
